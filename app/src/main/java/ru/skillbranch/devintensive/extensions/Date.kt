@@ -13,7 +13,7 @@ import java.util.*
  * Date().format() //14:00:00 27.06.19
  * Date().format("HH:mm") //14:00
  */
-fun Date.humanizeDiff(pattern: String = "HH:mm:ss dd.MM.yy"): String {
+fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern)
     return dateFormat.format(this)
 }
@@ -34,6 +34,11 @@ fun Date.add(value: Int, unit: TimeUnits): Date {
         TimeUnits.DAY -> value * 24 * 60 * 60 * 1000
     }
     return Date(time)
+}
+
+fun Date.humanizeDiff(pattern: String = "HH:mm:ss dd.MM.yy"): String {
+    val dateFormat = SimpleDateFormat(pattern)
+    return dateFormat.format(this)
 }
 
 enum class TimeUnits {
