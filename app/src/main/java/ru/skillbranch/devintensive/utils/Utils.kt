@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
+import java.lang.StringBuilder
+
 object Utils {
 
     /**
@@ -78,4 +80,64 @@ object Utils {
         return "$one$two"
     }
 
+    /**
+     * Возвращающий строку из латинских символов.
+     *
+     * @param payload строка, которую надо траслетилировать.
+     * @param divider разделитель в итоговой строке, по умолчанию " ".
+     * @return возвращающий строку из латинских символов
+     *
+     * Utils.transliteration("Женя Стереотипов") //Zhenya Stereotipov
+     * Utils.transliteration("Amazing Петр", "_") //Amazing_Petr
+     */
+    fun transliteration(payload: String, divider: String = " "): String {
+        val stringBuilder = StringBuilder()
+        for (char in payload) {
+            stringBuilder.append(
+                symbols.getOrDefault(
+                    char.toString().toLowerCase(),
+                    char.toString()
+                )
+            )
+        }
+        return stringBuilder.toString()
+            .split(payload, " ")
+            .joinToString(separator = divider) { it.capitalize() }
+    }
+
+    private val symbols = hashMapOf<String, String>(
+        "а" to "a",
+        "б" to "b",
+        "в" to "v",
+        "г" to "g",
+        "д" to "d",
+        "е" to "e",
+        "ё" to "e",
+        "ж" to "zh",
+        "з" to "z",
+        "и" to "i",
+        "й" to "i",
+        "к" to "k",
+        "л" to "l",
+        "м" to "m",
+        "н" to "n",
+        "о" to "o",
+        "п" to "p",
+        "р" to "r",
+        "с" to "s",
+        "т" to "t",
+        "у" to "u",
+        "ф" to "f",
+        "х" to "h",
+        "ц" to "c",
+        "ч" to "ch",
+        "ш" to "sh",
+        "щ" to "sh'",
+        "ъ" to "",
+        "ы" to "i",
+        "ь" to "",
+        "э" to "e",
+        "ю" to "yu",
+        "я" to "ya"
+    )
 }
