@@ -69,6 +69,17 @@ fun Date.humanizeDiff(): String {
  * @param min колличество минут
  * @return строку с правильным сколонением слова "минуты"
  */
+private fun getSecondsWithSuffix(sec: Long): String = when {
+    sec in 2..4 || (sec % 10 in 2..4) && sec !in 12..14 -> "секунды"
+    sec % 10 == 1L && sec != 11L -> "секунда"
+    else -> "секунду"
+}
+/**
+ * Возвращает правильное сколонение слова "минуты"
+ *
+ * @param min колличество минут
+ * @return строку с правильным сколонением слова "минуты"
+ */
 private fun getMinutesWithSuffix(min: Long): String = when {
     min in 2..4 || min%10 in 2..4 && min !in 12..14 -> "минуты"
     min != 11L && min%10 == 1L -> "минуту"
@@ -92,12 +103,49 @@ private fun getHoursWithSuffix(hour: Long): String = when {
  * @param days колличество дней
  * @return строку с правильным сколонением слова "дни"
  */
-fun getDaysWithSuffix(days: Long): String = when {
+private fun getDaysWithSuffix(days: Long): String = when {
     days in 2..4 || (days%10 in 2..4) && days !in 12..14-> "дня"
     days%10 == 1L && days != 11L -> "день"
     else -> "дней"
 }
 
 enum class TimeUnits {
-    SECOND, MINUTE, HOUR, DAY
+    SECOND {
+        /**
+         * Возвращает правильное сколонение слова "секунды"
+         *
+         * @param value секунд
+         * @return строку с value + правильным сколонением слова "секунды"
+         */
+        override fun plural(value: Int): String = "$value ${getSecondsWithSuffix(value.toLong())}"
+    },
+    MINUTE {
+        /**
+         * Возвращает правильное сколонение слова "минуты"
+         *
+         * @param value колличество минут
+         * @return строку с value + правильным сколонением слова "минуты"
+         */
+        override fun plural(value: Int): String = "$value ${getMinutesWithSuffix(value.toLong())}"
+    },
+    HOUR {
+        /**
+         * Возвращает правильное сколонение слова "часы"
+         *
+         * @param value колличество часов
+         * @return строку с value + правильным сколонением слова "часы"
+         */
+        override fun plural(value: Int): String = "$value ${getHoursWithSuffix(value.toLong())}"
+    },
+    DAY {
+        /**
+         * Возвращает правильное сколонение слова "дни"
+         *
+         * @param value колличество дней
+         * @return строку с value + правильным сколонением слова "дни"
+         */
+        override fun plural(value: Int): String = "$value ${getDaysWithSuffix(value.toLong())}"
+    };
+
+    abstract fun plural(value: Int): String
 }
