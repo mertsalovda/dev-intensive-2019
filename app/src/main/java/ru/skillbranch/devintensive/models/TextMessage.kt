@@ -16,5 +16,5 @@ class TextMessage(
      * @return String содержащюю информацию о id сообщения, имени отправителя,
      * виде сообщения ("получил/отправил") и типе сообщения ("сообщение")
      */
-    override fun formatMessage() = "$id, ${from?.firstName} ${if (isIncoming) "получил" else "отправил"} сообщение \"$text\" ${date.humanizeDiff()}"
+    override fun formatMessage() = "id:$id ${from?.firstName} ${if (isIncoming) "получил" else "отправил"} сообщение \"$text\" ${date.humanizeDiff()}"
 }

@@ -16,5 +16,5 @@ class ImageMessage(
      * @return возвращает строку содержащюю информацию о id сообщения, имени отправителя,
      * виде сообщения ("получил/отправил") и типе сообщения ("изображение")
      */
-    override fun formatMessage() = "id:$id, ${from?.firstName} ${if (isIncoming) "получил" else "отправил"} изображение \"$image\" ${date.humanizeDiff()}"
+    override fun formatMessage() = "id:$id ${from?.firstName} ${if (isIncoming) "получил" else "отправил"} изображение \"$image\" ${date.humanizeDiff()}"
 }
