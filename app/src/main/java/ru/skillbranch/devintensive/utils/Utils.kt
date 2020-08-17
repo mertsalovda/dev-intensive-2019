@@ -105,6 +105,9 @@ object Utils {
             .joinToString(separator = divider) { it.capitalize() }
     }
 
+    /**
+     * Словарь траслитирации
+     */
     private val symbols = hashMapOf<String, String>(
         "а" to "a",
         "б" to "b",
