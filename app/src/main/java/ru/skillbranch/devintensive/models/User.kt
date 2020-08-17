@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.models
 
+import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
 data class User(
@@ -23,17 +24,17 @@ data class User(
 
     companion object Factory {
         private var lastId = -1
+
+        /**
+         * Создаёт объект User, использую входную строку для формирования имени и фамилии
+         *
+         * @param fullName строка вида "Имя Фамилия"
+         * @return User
+         */
         fun makeUser(fullName: String?): User {
             lastId++
-            if (fullName == null) {
-                return User(lastId.toString())
-            }
 
-            val parts = fullName.split(" ")
-
-            val firstName = parts.getOrNull(0)
-            val lastName = parts.getOrNull(1)
-
+            val (firstName, lastName) = Utils.parseFullName(fullName)
             return User(lastId.toString(), firstName, lastName)
         }
     }
