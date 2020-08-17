@@ -91,16 +91,12 @@ object Utils {
      * Utils.transliteration("Amazing Петр", "_") //Amazing_Petr
      */
     fun transliteration(payload: String, divider: String = " "): String {
-        val stringBuilder = StringBuilder()
+        val sb = StringBuilder()
         for (char in payload) {
-            stringBuilder.append(
-                symbols.getOrDefault(
-                    char.toString().toLowerCase(),
-                    char.toString()
-                )
-            )
+            val symbol = symbols[char.toString().toLowerCase()] ?: char.toString()
+            sb.append(symbol)
         }
-        return stringBuilder.toString()
+        return sb.toString()
             .split(payload, " ")
             .joinToString(separator = divider) { it.capitalize() }
     }
