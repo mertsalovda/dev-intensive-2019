@@ -15,7 +15,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var benderImage: ImageView
     private lateinit var messageEt: EditText
+
     private lateinit var textTxt: TextView
+
     private lateinit var sendBtn: ImageButton
 
     private lateinit var benderObj: Bender
@@ -29,7 +31,12 @@ class MainActivity : AppCompatActivity() {
         textTxt = tv_text
         sendBtn = iv_send
 
-        benderObj = Bender()
+        val status = savedInstanceState?.getString(STATUS_KEY) ?: Bender.Status.NORMAL.name
+        val question = savedInstanceState?.getString(QUESTION_KEY) ?: Bender.Question.NAME.name
+        benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
+
+        val (r, g, b) = benderObj.status.color
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
 
         textTxt.text = benderObj.askQuestion()
 
@@ -39,5 +46,17 @@ class MainActivity : AppCompatActivity() {
             val (r, g, b) = color
             benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.putString(STATUS_KEY, benderObj.status.name)
+        outState?.putString(QUESTION_KEY, benderObj.question.name)
+    }
+
+    companion object {
+        private const val STATUS_KEY = "STATUS"
+        private const val QUESTION_KEY = "QUESTION_KEY"
     }
 }
