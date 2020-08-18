@@ -1,7 +1,11 @@
 package ru.skillbranch.devintensive.models
 
-class Bender(val status: Status = Status.NORMAL, val question: Question = Question.NAME) {
+class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
+    /**
+     * Получить вопрос от Бендера.
+     * @return строка с вопросом.
+     */
     fun askQuestion(): String = when (question) {
         Question.NAME -> Question.NAME.question
         Question.PROFESSION -> Question.PROFESSION.question
@@ -11,11 +15,20 @@ class Bender(val status: Status = Status.NORMAL, val question: Question = Questi
         Question.IDLE -> Question.IDLE.question
     }
 
+    /**
+     * Ответить на вопрос Бендера
+     * @param answer строка с ответом на вопрос
+     * @return пару занчений Pair<String, Triple<Int, Int, Int>>,
+     * где String результат проверки правильности ответа,
+     * и Triple<Int, Int, Int> rgb значение цвета
+     */
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
         return if (question.answers.contains(answer)) {
-            "Отлично - это правильный ответ!" to status.color
+            question = question.nextQuestion()
+            "Отлично - это правильный ответ!\n${question.question}" to status.color
         } else {
-            "Это правильный ответ!" to status.color
+            status = status.nextStatus()
+            "Это не правильный ответ!\n${question.question}" to status.color
         }
     }
 
@@ -23,16 +36,46 @@ class Bender(val status: Status = Status.NORMAL, val question: Question = Questi
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
-        CRITICAL(Triple(255, 0, 0))
+        CRITICAL(Triple(255, 0, 0));
+
+        /**
+         * Метод циклически возвращает статус
+         * @return Status
+         */
+        fun nextStatus(): Status {
+            return if (this.ordinal < values().lastIndex) {
+                values()[this.ordinal + 1]
+            } else {
+                values()[0]
+            }
+        }
     }
 
     enum class Question(val question: String, val answers: List<String>) {
-        NAME("Как меня зовут?", listOf("бендер", "bender")),
-        PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")),
-        MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")),
-        BDAY("Когда меня создали?", listOf("2993")),
-        SERIAL("Мой серийный номер?", listOf("2716057")),
-        IDLE("На этом все, вопросов больше нет", listOf())
+        NAME("Как меня зовут?", listOf("бендер", "bender")) {
+            override fun nextQuestion(): Question = PROFESSION
+        },
+        PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
+            override fun nextQuestion(): Question = MATERIAL
+        },
+        MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
+            override fun nextQuestion(): Question = BDAY
+        },
+        BDAY("Когда меня создали?", listOf("2993")) {
+            override fun nextQuestion(): Question = SERIAL
+        },
+        SERIAL("Мой серийный номер?", listOf("2716057")) {
+            override fun nextQuestion(): Question = IDLE
+        },
+        IDLE("На этом все, вопросов больше нет", listOf()) {
+            override fun nextQuestion(): Question = IDLE
+        };
+
+        /**
+         * Возвращает следующий вопрос
+         * @return Question
+         */
+        abstract fun nextQuestion(): Question
     }
     /*   Валидация
 
