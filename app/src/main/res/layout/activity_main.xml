@@ -44,7 +44,7 @@
             android:textColorHint="@color/color_gray_light" />
 
         <ImageButton
-            android:id="@+id/btn_send"
+            android:id="@+id/iv_send"
             android:layout_width="@dimen/btn_send_width_24"
             android:layout_height="@dimen/btn_send_height_24"
             android:background="@android:color/transparent"
