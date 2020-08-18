@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Chat Dev-intensive</string>
+    <string name="hint.text.enter.message">Введите текст</string>
 </resources>
