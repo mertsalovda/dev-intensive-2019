@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "ru.skillbranch.dev_intensive"
+        applicationId "ru.skillbranch.devintensive"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
