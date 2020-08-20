@@ -19,16 +19,24 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
      * Ответить на вопрос Бендера
      * @param answer строка с ответом на вопрос
      * @return пару занчений Pair<String, Triple<Int, Int, Int>>,
-     * где String результат проверки правильности ответа,
-     * и Triple<Int, Int, Int> rgb значение цвета
+     * где String следующий вопрос и Triple<Int, Int, Int> rgb цвет статуса.
      */
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return if (question.answers.contains(answer)) {
-            question = question.nextQuestion()
-            "Отлично - это правильный ответ!\n${question.question}" to status.color
-        } else {
-            status = status.nextStatus()
-            "Это не правильный ответ!\n${question.question}" to status.color
+        return when {
+            question.answers.contains(answer) -> {
+                question = question.nextQuestion()
+                "Отлично - ты справился\n${question.question}" to status.color
+            }
+            question == Question.IDLE -> "Отлично - ты справился\nНа этом все, вопросов больше нет" to status.color
+            status == Status.CRITICAL -> {
+                status = Status.NORMAL
+                question = Question.NAME
+                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+            }
+            else -> {
+                status = status.nextStatus()
+                "Это не правильный ответ!\n${question.question}" to status.color
+            }
         }
     }
 
