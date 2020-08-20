@@ -31,11 +31,11 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             status == Status.CRITICAL -> {
                 status = Status.NORMAL
                 question = Question.NAME
-                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                "Это не правильный ответ. Давай все по новой\n${question.question}" to status.color
             }
             else -> {
                 status = status.nextStatus()
-                "Это неправильный ответ\n${question.question}" to status.color
+                "Это не правильный ответ\n${question.question}" to status.color
             }
         }
     }
