@@ -1,6 +1,6 @@
 package ru.skillbranch.devintensive.extensions
 
-import org.jsoup.Jsoup
+import java.util.regex.Pattern
 
 /**
  * Усекает строку до указанного числа символов. Если строка была учечена, то добавляется
@@ -24,13 +24,13 @@ fun String.truncate(value: Int = 16): String {
  * @return строку без HTML-тегов и одним пробелом между словами.
  */
 fun String.stripHtml(): String {
-/*    val htmlTegPattern = Pattern.compile("<.+?>");
+    val htmlTegPattern = Pattern.compile("<.+?>");
     val spacePattern = Pattern.compile(" +");
 
     val htmlTegMatcher = htmlTegPattern.matcher(this)
     var result = htmlTegMatcher.replaceAll("").trim()
 
     val spaceMatcher = spacePattern.matcher(result)
-    return spaceMatcher.replaceAll(" ").trim() */
-    return Jsoup.parse(this).text()
+    return spaceMatcher.replaceAll(" ").trim()
+//    return Jsoup.parse(this).text()
 }

@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         sendBtn.setOnClickListener { sendMessage() }
 
-        messageEt.setOnEditorActionListener { v, actionId, event ->
+        messageEt.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendMessage()
                 true
