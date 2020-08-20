@@ -37,8 +37,10 @@
             android:layout_marginRight="@dimen/spacing_normal_16"
             android:layout_weight="1"
             android:hint="@string/hint.text.enter.message"
-            android:lines="1"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
             android:paddingTop="@dimen/spacing_normal_16"
+            android:inputType="textShortMessage"
             android:paddingBottom="@dimen/spacing_normal_16"
             android:textColor="@color/color_gray_light"
             android:textColorHint="@color/color_gray_light" />
