@@ -47,8 +47,8 @@
 
         <ImageButton
             android:id="@+id/iv_send"
-            android:layout_width="@dimen/btn_send_width_48"
-            android:layout_height="@dimen/btn_send_height_48"
+            android:layout_width="@dimen/btn_send_width_24"
+            android:layout_height="@dimen/btn_send_height_24"
             android:background="@android:color/transparent"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/spacing_normal_16"
