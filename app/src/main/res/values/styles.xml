@@ -56,7 +56,7 @@
         <item name="android:paddingRight">@dimen/spacing_normal_16</item>
         <item name="android:minHeight">72dp</item>
     </style>
-
+    <!--Тема Splash Screen экрана-->
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <!-- для Android 5+ вы можете поменять цвет colorPrimaryDark, -->

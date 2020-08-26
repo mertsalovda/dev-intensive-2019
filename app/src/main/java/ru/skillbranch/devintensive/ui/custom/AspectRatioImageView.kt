@@ -1,7 +1,6 @@
-package ru.skillbranch.devintensive.iu.custom
+package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.widget.ImageView
 import ru.skillbranch.devintensive.R
