@@ -96,9 +96,13 @@ object Utils {
             val symbol = symbols[char.toString().toLowerCase()] ?: char.toString()
             sb.append(symbol)
         }
-        return sb.toString()
-                .split(payload, " ")
-                .joinToString(separator = divider) { it.capitalize() }
+        if (payload == "") return ""
+        val split = sb.toString().split(payload, " ")
+        return if (split.size == 1) {
+            split[0].capitalize()
+        } else {
+            split.joinToString(separator = divider) { it.capitalize() }
+        }
     }
     /*   fun transliteration(payload: String, divider: String = " "): String {
            val dict = mapOf(

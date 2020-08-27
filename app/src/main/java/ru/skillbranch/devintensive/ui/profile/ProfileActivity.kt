@@ -1,8 +1,6 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +11,8 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.AvatarInitialsDrawable
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -75,7 +75,7 @@ class ProfileActivity : AppCompatActivity() {
      * Иницилизирует [ProfileViewModel] для текущей активити и подписывается на [Profile]
      *
      */
-    private fun initViewModel(){
+    private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getAppTheme().observe(this, Observer { updateTheme(it) })
@@ -89,10 +89,34 @@ class ProfileActivity : AppCompatActivity() {
      */
     private fun updateUI(profile: Profile) {
         profile.toMap().also {
-            for ((k, v) in viewFields){
+            for ((k, v) in viewFields) {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
+    }
+
+    /**
+     * Обновляет аватар. Если имя и фамилия profile пустые, то подставиться аватар по умолчанию,
+     * иначе будет загружен аватар с инициалами [AvatarInitialsDrawable].
+     *
+     * @param profile объект [Profile]
+     */
+    private fun updateAvatar(profile: Profile) {
+        val firstName = Utils.toInitials(profile.firstName, "")
+        val lastName = Utils.toInitials(profile.lastName, "")
+        val initialsFirstName = Utils.transliteration(firstName ?: "")
+        val initialsLastName = Utils.transliteration(lastName ?: "")
+        val initials = "$initialsFirstName$initialsLastName"
+        val avatar = if (initials == "") {
+            resources.getDrawable(R.drawable.avatar_default, theme)
+        } else {
+            resources.getDrawable(R.drawable.avatar_initials, theme)
+
+        }
+        val textSize = if (initials.length >= 4) 70f else 80f
+        val avatarInitialsDrawable = AvatarInitialsDrawable(avatar, initials, textSize)
+        iv_avatar.setImageDrawable(avatarInitialsDrawable)
     }
 
     /**
@@ -134,7 +158,7 @@ class ProfileActivity : AppCompatActivity() {
                 null
             }
 
-            val icon = if(isEdit) {
+            val icon = if (isEdit) {
                 resources.getDrawable(R.drawable.ic_save_black_24dp, theme)
             } else {
                 resources.getDrawable(R.drawable.ic_edit_black_24dp, theme)
@@ -155,7 +179,6 @@ class ProfileActivity : AppCompatActivity() {
                 about = et_about.text.toString(),
                 repository = et_repository.text.toString()
         ).apply {
-            nickName = "$firstName $lastName"
             viewModel.saveProfileDate(this)
         }
     }
