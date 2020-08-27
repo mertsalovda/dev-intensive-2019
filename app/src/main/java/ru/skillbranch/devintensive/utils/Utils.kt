@@ -1,6 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
 import java.lang.StringBuilder
+import java.net.URL
 
 object Utils {
 
@@ -78,6 +79,40 @@ object Utils {
             }
         }
         return "$one$two"
+    }
+
+    /**
+     * Валидация на соответствие url валидному github аккаунту,
+     * вводимое значение может быть пустой строкой или должно содержать домен
+     * github.com (https://, www, https://www) и аккаунт пользователя
+     *
+     * @param text будет проверен на соответсвие домена github.com с именем аккаунта пользователя
+     * @return true если текст соответствует условию домена github.com с именем аккаунта пользователя
+     */
+    fun validGithubURL(text: String): Boolean {
+        if (text == "") return true
+        val invalidPathSet = mutableSetOf(
+                "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing", "nonprofit", "customer-stories", "security", "login", "join")
+        var urlText = text
+        var result = false
+        val url: URL?
+        if(text.startsWith("github.com", true) || text.startsWith("www.github.com", true)){
+            urlText = "https://$text"
+        }
+        try {
+            url = URL(urlText.toLowerCase())
+
+            if ((url.host == "github.com" || url.host == "www.github.com")
+                    && !invalidPathSet.contains(url.path.replace("/", ""))
+                    && (url.protocol == "https" || url.protocol == "")
+                    && url.path.split("/").size == 2
+                    && url.path.replace("/", "") != "") {
+                result = true
+            }
+        } catch (e: Exception) {
+        }
+
+        return result
     }
 
     /**

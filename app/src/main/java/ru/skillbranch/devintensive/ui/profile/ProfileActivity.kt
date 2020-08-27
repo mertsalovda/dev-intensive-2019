@@ -3,6 +3,8 @@ package ru.skillbranch.devintensive.ui.profile
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -57,18 +59,49 @@ class ProfileActivity : AppCompatActivity() {
                 "respect" to tv_respect
         )
         showCurrentMode(isEditMode)
+
         // Переключает режим редактирования
         btn_edit.setOnClickListener {
-            if (isEditMode) {
+            if (!isEditMode) {
+                updateEditMode()
+            } else if (isEditMode && wr_repository.error == null) {
                 saveProfileInfo()
+                updateEditMode()
             }
-            isEditMode = !isEditMode
-            showCurrentMode(isEditMode)
         }
 
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(text: Editable?) {
+                if (Utils.validGithubURL(text.toString())) {
+                    wr_repository.error = ""
+                }
+            }
+
+            override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+                if (Utils.validGithubURL(text.toString())) {
+                    wr_repository.error = ""
+                } else {
+                    wr_repository.error = "Невалидный адрес репозитория"
+                }
+            }
+        })
+    }
+
+    /**
+     * Переключает режим редактирования и запускает обновление интерфейса.
+     *
+     */
+    private fun updateEditMode() {
+        isEditMode = !isEditMode
+        showCurrentMode(isEditMode)
     }
 
     /**
