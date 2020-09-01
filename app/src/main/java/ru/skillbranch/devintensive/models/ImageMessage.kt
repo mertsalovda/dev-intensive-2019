@@ -1,20 +1,26 @@
 package ru.skillbranch.devintensive.models
 
-import ru.skillbranch.devintensive.extensions.humanizeDiff
+import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import java.util.*
 
+/**
+ * Класс описывающий сообщение с изображением реализует [BaseMessage]
+ *
+ * @property id идентификатор сообщения
+ * @property from отправитель сообщения
+ * @property chat место назначения сообщения
+ * @property isIncoming флаг входящего сообщения
+ * @property date дата отправки/получения
+ * @property isReadied флаг прочтения сообщения
+ * @property image изображение
+ */
 class ImageMessage(
-    id: String,
-    from: User?,
-    chat: Chat,
-    isIncoming: Boolean = false,
-    date: Date = Date(),
-    var image: String?
-) : BaseMessage(id, from, chat, isIncoming, date) {
-
-    /**
-     * @return возвращает строку содержащюю информацию о id сообщения, имени отправителя,
-     * виде сообщения ("получил/отправил") и типе сообщения ("изображение")
-     */
-    override fun formatMessage() = "id:$id ${from?.firstName} ${if (isIncoming) "получил" else "отправил"} изображение \"$image\" ${date.humanizeDiff()}"
-}
+        id: String,
+        from: User,
+        chat: Chat,
+        isIncoming: Boolean = false,
+        date: Date = Date(),
+        isReadied: Boolean = false,
+        var image: String
+) : BaseMessage(id, from, chat, isIncoming, date, isReadied)

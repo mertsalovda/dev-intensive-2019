@@ -54,13 +54,42 @@ fun Date.humanizeDiff(): String {
         in 0..1 -> "только что"
         in 1..45 -> "${future}несколько секунд $past"
         in 45..75 -> "${future}минуту $past"
-        in 75..(45 * 60) -> "$future${diff / 60} ${getMinutesWithSuffix(diff/60)} $past"
+        in 75..(45 * 60) -> "$future${diff / 60} ${getMinutesWithSuffix(diff / 60)} $past"
         in (45 * 60)..(75 * 60) -> "${future}час $past"
         in (75 * 60)..(22 * 3600) -> "$future${diff / 3600} ${getHoursWithSuffix(diff / 3600)} $past"
         in (22 * 3600)..(26 * 3600) -> "${future}день $past"
         in (26 * 3600)..(360 * 3600 * 24) -> "$future${diff / 3600 / 24} ${getDaysWithSuffix(diff / 3600 / 24)} $past"
         else -> "более ${if (isFuture) "чем через " else ""}год${if (!isFuture) "а" else ""} $past"
     }
+}
+
+const val SECOND = 1000L
+const val MINUTE = 60 * SECOND
+const val HOUR = 60 * MINUTE
+const val DAY = 24 * HOUR
+
+/**
+ * Форматирует [Date] в виде [String] в зависимости от того, является ли дата текущим днём
+ *
+ * @return строку в виде HH:mm, если текущая дата, или dd.MM.yy, если не текущая дата
+ */
+fun Date.shortFormat(): String {
+    val pattern = if(this.isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    val dateFormat = SimpleDateFormat(pattern)
+    return dateFormat.format(this)
+}
+
+/**
+ * Определяет является ли [Date] объект приёмние тем же днём, что и [Date] переданный в качестве
+ * аргумента
+ *
+ * @param date объект [Date] с которым будет сравниваться объект приёмнк
+ * @return TRUE если один и тот же день, FALSE если разные дни.
+ */
+fun Date.isSameDay(date: Date): Boolean {
+    val day1 = this.time / DAY
+    val day2 = date.time / DAY
+    return day1 == day2
 }
 
 /**
@@ -74,6 +103,7 @@ private fun getSecondsWithSuffix(sec: Long): String = when {
     sec % 10 == 1L && sec != 11L -> "секунда"
     else -> "секунду"
 }
+
 /**
  * Возвращает правильное сколонение слова "минуты"
  *
@@ -81,8 +111,8 @@ private fun getSecondsWithSuffix(sec: Long): String = when {
  * @return строку с правильным сколонением слова "минуты"
  */
 private fun getMinutesWithSuffix(min: Long): String = when {
-    min in 2..4 || min%10 in 2..4 && min !in 12..14 -> "минуты"
-    min != 11L && min%10 == 1L -> "минуту"
+    min in 2..4 || min % 10 in 2..4 && min !in 12..14 -> "минуты"
+    min != 11L && min % 10 == 1L -> "минуту"
     else -> "минут"
 }
 
@@ -93,10 +123,11 @@ private fun getMinutesWithSuffix(min: Long): String = when {
  * @return строку с правильным сколонением слова "часы"
  */
 private fun getHoursWithSuffix(hour: Long): String = when {
-    hour in 2..4 || (hour%10 in 2..4) && hour !in 12..14-> "часа"
-    hour%10 == 1L && hour != 11L -> "час"
+    hour in 2..4 || (hour % 10 in 2..4) && hour !in 12..14 -> "часа"
+    hour % 10 == 1L && hour != 11L -> "час"
     else -> "часов"
 }
+
 /**
  * Возвращает правильное сколонение слова "дни"
  *
@@ -104,8 +135,8 @@ private fun getHoursWithSuffix(hour: Long): String = when {
  * @return строку с правильным сколонением слова "дни"
  */
 private fun getDaysWithSuffix(days: Long): String = when {
-    days in 2..4 || (days%10 in 2..4) && days !in 12..14-> "дня"
-    days%10 == 1L && days != 11L -> "день"
+    days in 2..4 || (days % 10 in 2..4) && days !in 12..14 -> "дня"
+    days % 10 == 1L && days != 11L -> "день"
     else -> "дней"
 }
 
