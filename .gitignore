@@ -12,7 +12,7 @@ local.properties
 build/
 gradle/
 gradlew
-gradle.properties
+#gradle.properties
 gradlew.bat
 
 app/libs
