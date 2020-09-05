@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user_list.*
+import kotlinx.android.synthetic.main.item_user_list.sv_indicator
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
 
@@ -52,8 +53,7 @@ class UserAdapter(val listener: (UserItem) -> Unit) : RecyclerView.Adapter<UserA
         fun bind(user: UserItem, listener: (UserItem) -> Unit) {
             if (user.avatar == null) {
                 Glide.with(itemView).clear(iv_avatar_user)
-                //TODO set avatar
-                // iv_avatar_single.setInitials(user.initials ?: "??")
+                iv_avatar_user.setInitials(user.initials ?: "??")
             } else {
                 Glide.with(itemView).load(user.avatar).into(iv_avatar_user)
             }
