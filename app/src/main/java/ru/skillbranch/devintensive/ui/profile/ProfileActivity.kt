@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.ui.custom.AvatarInitialsDrawable
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -143,12 +142,10 @@ class ProfileActivity : AppCompatActivity() {
         val avatar = if (initials == "") {
             resources.getDrawable(R.drawable.avatar_default, theme)
         } else {
-            resources.getDrawable(R.drawable.avatar_initials, theme)
-
+            null
         }
-        val textSize = if (initials.length >= 4) 70f else 80f
-        val avatarInitialsDrawable = AvatarInitialsDrawable(avatar, initials, textSize)
-        iv_avatar.setImageDrawable(avatarInitialsDrawable)
+        iv_avatar.setImageDrawable(avatar)
+        iv_avatar.setInitials(initials)
     }
 
     /**
