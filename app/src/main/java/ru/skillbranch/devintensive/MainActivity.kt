@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var textTxt: TextView
 
-    lateinit var sendBtn: ImageButton
+    lateinit var sendBtn: ImageView
 
     lateinit var benderObj: Bender
 

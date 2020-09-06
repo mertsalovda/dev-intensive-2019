@@ -8,12 +8,12 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:gravity="center"
-        android:textSize="@dimen/spacing_large_24"
         android:id="@+id/tv_text"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="Hello World!" />
+        android:gravity="center"
+        android:text="Hello World!"
+        android:textSize="@dimen/font_large_24" />
 
     <ImageView
         android:id="@+id/iv_bender"
@@ -36,24 +36,21 @@
             android:layout_marginLeft="@dimen/spacing_normal_16"
             android:layout_marginRight="@dimen/spacing_normal_16"
             android:layout_weight="1"
-            android:hint="@string/hint.text.enter.message"
-            android:maxLines="1"
+            android:hint="Введите текст"
             android:imeOptions="actionDone"
+            android:lines="1"
             android:paddingTop="@dimen/spacing_normal_16"
-            android:inputType="textShortMessage"
             android:paddingBottom="@dimen/spacing_normal_16"
             android:textColor="@color/color_gray_light"
             android:textColorHint="@color/color_gray_light" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/iv_send"
             android:layout_width="@dimen/btn_send_width_24"
             android:layout_height="@dimen/btn_send_height_24"
-            android:background="@android:color/transparent"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/spacing_normal_16"
             android:src="@drawable/ic_send_black_24dp" />
     </LinearLayout>
-
 
 </LinearLayout>

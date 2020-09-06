@@ -11,6 +11,6 @@
     <dimen name="spacing_normal_16">16dp</dimen>
     <dimen name="spacing_small_8">8dp</dimen>
     <dimen name="spacing_tiny_4">4dp</dimen>
-    <dimen name="btn_send_width_24">24dp</dimen>
-    <dimen name="btn_send_height_24">24dp</dimen>
+    <dimen name="btn_send_width_24">32dp</dimen>
+    <dimen name="btn_send_height_24">32dp</dimen>
 </resources>
