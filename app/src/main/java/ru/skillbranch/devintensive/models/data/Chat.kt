@@ -28,10 +28,7 @@ data class Chat(
      * @return число непрочитанных сообщений
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun unreadableMessageCount(): Int {
-        //TODO implement me
-        return 0
-    }
+    fun unreadableMessageCount(): Int = messages.filter { it.isReadied == false }.size
 
     /**
      * Получить дату последнего сообщения
@@ -40,8 +37,11 @@ data class Chat(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun lastMessageDate(): Date? {
-        //TODO implement me
-        return Date()
+        return if (messages.size > 0) {
+            messages.last().date
+        } else {
+            null
+        }
     }
 
     /**
@@ -50,8 +50,8 @@ data class Chat(
      * @return последнее сообщение в чате в обрезанном виде
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageShort(): Pair<String, String?> = when(val lastMessage = messages.lastOrNull()){
-       //TODO implement me
+    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.lastOrNull()) {
+        //TODO implement me
         else -> "" to ""
     }
 
@@ -69,27 +69,27 @@ data class Chat(
         return if (isSingle()) {
             val user = members.first()
             ChatItem(
-                id,
-                user.avatar,
-                Utils.toInitials(user.firstName, user.lastName) ?: "??",
-                "${user.firstName ?: ""} ${user.lastName ?: ""}",
-                lastMessageShort().first,
-                unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
-                user.isOnline
+                    id,
+                    user.avatar,
+                    Utils.toInitials(user.firstName, user.lastName) ?: "??",
+                    "${user.firstName ?: ""} ${user.lastName ?: ""}",
+                    lastMessageShort().first,
+                    unreadableMessageCount(),
+                    lastMessageDate()?.shortFormat(),
+                    user.isOnline
             )
         } else {
             ChatItem(
-                id,
-                null,
-                "",
-                title,
-                lastMessageShort().first,
-                unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
-                false,
-                ChatType.GROUP,
-                lastMessageShort().second
+                    id,
+                    null,
+                    "",
+                    title,
+                    lastMessageShort().first,
+                    unreadableMessageCount(),
+                    lastMessageDate()?.shortFormat(),
+                    false,
+                    ChatType.GROUP,
+                    lastMessageShort().second
             )
         }
     }
@@ -99,7 +99,7 @@ data class Chat(
  * Типы чатов
  *
  */
-enum class ChatType{
+enum class ChatType {
     SINGLE,
     GROUP,
     ARCHIVE
