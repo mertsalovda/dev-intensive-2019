@@ -66,7 +66,7 @@ object PreferencesRepository {
      * @param pair Пара значений KEY [String] и VALUE [Any]
      * @exception error при попытке добавить непримитивные данные бросает [IllegalStateException]
      */
-    fun putValue(pair: Pair<String, Any>) {
+    fun putValue(pair: Pair<String, Any?>) {
         pref.edit().apply {
             val key = pair.first
             val value = pair.second
