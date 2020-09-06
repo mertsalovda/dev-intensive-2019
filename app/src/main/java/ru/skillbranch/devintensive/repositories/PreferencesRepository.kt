@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
 import ru.skillbranch.devintensive.App
-import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.profile.Profile
 
 object PreferencesRepository {
 
