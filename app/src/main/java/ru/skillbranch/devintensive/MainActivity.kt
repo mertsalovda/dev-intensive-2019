@@ -15,14 +15,14 @@ import ru.skillbranch.devintensive.models.Bender
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var benderImage: ImageView
-    private lateinit var messageEt: EditText
+    lateinit var benderImage: ImageView
+    lateinit var messageEt: EditText
 
-    private lateinit var textTxt: TextView
+    lateinit var textTxt: TextView
 
-    private lateinit var sendBtn: ImageButton
+    lateinit var sendBtn: ImageButton
 
-    private lateinit var benderObj: Bender
+    lateinit var benderObj: Bender
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         textTxt.text = phrase
         val (r, g, b) = color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+        (messageEt as TextView).text = ""
         this.hideKeyboard()
     }
 
