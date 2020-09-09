@@ -13,6 +13,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
+import ru.skillbranch.devintensive.ui.adapters.TouchType
 import ru.skillbranch.devintensive.viewmodels.ArchiveViewModel
 
 class ArchiveActivity : AppCompatActivity() {
@@ -37,7 +38,7 @@ class ArchiveActivity : AppCompatActivity() {
 
         chatAdapter = ChatAdapter(listener, archiveListener)
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        val touchCallback = ChatItemTouchHelperCallback(chatAdapter) { chat ->
+        val touchCallback = ChatItemTouchHelperCallback(chatAdapter, TouchType.UNARCHIVE) { chat ->
             viewModel.removeFromArchive(chat.id)
             Snackbar.make(rv_chat_list, "Вы точно хотите убрать ${chat.title.trim()} из архива?", Snackbar.LENGTH_LONG)
                     .setAction("Нет") { viewModel.restoreToArchive(chat.id) }

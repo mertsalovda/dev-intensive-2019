@@ -186,7 +186,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit, val archiveListener: (ChatIt
                 visibility = if (item.messageCount != 0) View.VISIBLE else View.GONE
                 text = item.title
             }
-            tv_message.text = if (tv_chat_message.visibility == View.GONE) "Архив пуст" else item.shortDescription
+            tv_message.text = if (tv_chat_message.visibility == View.GONE) "" else item.shortDescription
             itemView.setOnClickListener { archiveListener.invoke(item) }
         }
 

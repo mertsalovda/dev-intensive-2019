@@ -15,6 +15,7 @@ import ru.skillbranch.devintensive.models.data.ChatItem
  */
 class ChatItemTouchHelperCallback(
         private val adapter: ChatAdapter,
+        private val type: TouchType = TouchType.ARCHIVE,
         private val swipeListener: (ChatItem) -> Unit) : ItemTouchHelper.Callback() {
 
     private val bgRect = RectF()
@@ -81,7 +82,11 @@ class ChatItemTouchHelperCallback(
      * Нарисовать иконку для смахиваемого элемента списка
      */
     private fun drawItem(canvas: Canvas, itemView: View, dX: Float) {
-        val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp, itemView.context.theme)
+        val icon = if(type == TouchType.ARCHIVE) {
+            itemView.resources.getDrawable(R.drawable.ic_archive_white_24dp, itemView.context.theme)
+        } else {
+            itemView.resources.getDrawable(R.drawable.ic_unarchive_white_24dp, itemView.context.theme)
+        }
         val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
         val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
 
@@ -96,6 +101,14 @@ class ChatItemTouchHelperCallback(
         icon.bounds = iconBounds
         icon.draw(canvas)
     }
+}
+
+/**
+ * Тип действия смахивания: Архивация или Разархивация
+ *
+ */
+enum class TouchType{
+    ARCHIVE, UNARCHIVE
 }
 
 /**
