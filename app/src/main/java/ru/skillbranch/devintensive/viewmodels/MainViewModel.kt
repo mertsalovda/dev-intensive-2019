@@ -1,8 +1,7 @@
 package ru.skillbranch.devintensive.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import ru.skillbranch.devintensive.extensions.mutableLiveData
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.repositories.ChatRepository
 
@@ -11,6 +10,8 @@ import ru.skillbranch.devintensive.repositories.ChatRepository
  *
  */
 class MainViewModel : ViewModel() {
+    // Поисковый запрос пользователей
+    private var query = mutableLiveData("")
     private val chatRepository = ChatRepository
 
     /**
@@ -21,15 +22,30 @@ class MainViewModel : ViewModel() {
                 .filter { !it.isArchived }
                 .map { it.toChatItem() }
                 .sortedBy { it.id.toInt() }
-    }
+    } as MutableLiveData
 
     /**
-     * Получить список чатов
+     * Получить список чатов соответствующих поисковому запросу query
      *
-     * @return список чатов
+     * @return список чатов удовлетворяющих запрос query
      */
     fun getChatData(): LiveData<List<ChatItem>> {
-        return chats
+        // MediatorLiveData объединяет два источника LiveData
+        val result = MediatorLiveData<List<ChatItem>>()
+
+        // Функция фильтрации пользователй в соответствии с запросом query
+        val filterF = {
+            val queryStr = query.value!!
+            val chatsValue = chats.value!!
+
+            result.value = if (queryStr.isEmpty()) chatsValue
+            else chatsValue.filter { it.title.contains(queryStr, true) }
+        }
+        // Объединение LiveData в MediatorLiveData
+        result.addSource(chats) { filterF.invoke() }
+        result.addSource(query) { filterF.invoke() }
+
+        return result
     }
 
     /**
@@ -52,6 +68,14 @@ class MainViewModel : ViewModel() {
         val chat = chatRepository.find(chatId)
         chat ?: return
         chatRepository.update(chat.copy(isArchived = false))
+    }
 
+    /**
+     * Обработчик поискового запроста. Установит новое значение для LiveData query
+     *
+     * @param text новый текст запроса
+     */
+    fun handleSearchQuery(text: String?) {
+        query.value = text
     }
 }

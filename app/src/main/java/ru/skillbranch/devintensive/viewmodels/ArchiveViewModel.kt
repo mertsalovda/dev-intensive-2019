@@ -1,8 +1,6 @@
 package ru.skillbranch.devintensive.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import ru.skillbranch.devintensive.extensions.mutableLiveData
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.repositories.ChatRepository
@@ -16,25 +14,20 @@ class ArchiveViewModel : ViewModel() {
     private var query = mutableLiveData("")
     private val chatRepository = ChatRepository
 
-    // Список чатов
-    private val chats = mutableLiveData(loadCats())
-
     /**
-     * Получить список чатов из репозитория
-     *
-     * @return список чатов [ChatItem]
+     * Список чатов. Подписан на изменение чатов в репозитории
      */
-    private fun loadCats(): List<ChatItem> {
-        return chatRepository.loadChats().value!!
+    private val chats = Transformations.map(chatRepository.loadChats()) { chats ->
+        return@map chats
                 .filter { it.isArchived }
                 .map { it.toChatItem() }
                 .sortedBy { it.id.toInt() }
-    }
+    } as MutableLiveData
 
     /**
-     * Получить список пользователй соответствующих поисковому запросу query
+     * Получить список чатов соответствующих поисковому запросу query
      *
-     * @return список пользователей удовлетворяющих запрос query
+     * @return список чатов удовлетворяющих запрос query
      */
     fun getChatData(): LiveData<List<ChatItem>> {
         // MediatorLiveData объединяет два источника LiveData
