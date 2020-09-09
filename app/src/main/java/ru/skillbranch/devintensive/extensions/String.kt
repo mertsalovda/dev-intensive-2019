@@ -15,7 +15,7 @@ fun String.truncate(value: Int = 16): String {
     if (string.length >= value) {
         string = string.substring(0 until value).trim()
     }
-    return "${string}$filling"
+    return "$string$filling"
 }
 
 /**
@@ -32,5 +32,4 @@ fun String.stripHtml(): String {
 
     val spaceMatcher = spacePattern.matcher(result)
     return spaceMatcher.replaceAll(" ").trim()
-//    return Jsoup.parse(this).text()
 }

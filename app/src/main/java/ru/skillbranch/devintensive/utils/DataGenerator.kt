@@ -383,6 +383,15 @@ object DataGenerator {
      */
     private fun generateStabChats(count: Int): List<Chat> {
         val list = mutableListOf<Chat>()
+
+        list.add(Chat(
+                "0",
+                "Aрхив чатов",
+                listOf(),
+                mutableListOf(),
+                false
+        ))
+
         for (user in stabUsers) {
             val singleChat = Chat(
                 "${list.size}",

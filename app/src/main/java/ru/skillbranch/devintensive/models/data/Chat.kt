@@ -70,7 +70,7 @@ data class Chat(
      * @return [ChatItem] соответствующий групповому или одиночному чату
      */
     fun toChatItem(): ChatItem {
-        return if (isSingle()) {
+        return if (isSingle() && id.toInt() > 0 ) {
             val user = members.first()
             ChatItem(
                     id,
@@ -82,11 +82,11 @@ data class Chat(
                     lastMessageDate()?.shortFormat(),
                     user.isOnline
             )
-        } else {
+        } else if (!isSingle() && id.toInt() > 0 ){
             ChatItem(
                     id,
                     null,
-                    "",
+                    getInitialsGroup(members),
                     title,
                     lastMessageShort().first,
                     unreadableMessageCount(),
@@ -95,7 +95,32 @@ data class Chat(
                     ChatType.GROUP,
                     lastMessageShort().second
             )
+        } else {
+            ChatItem(
+                    id,
+                    null,
+                    getInitialsGroup(members),
+                    title,
+                    lastMessageShort().first,
+                    unreadableMessageCount(),
+                    lastMessageDate()?.shortFormat(),
+                    false,
+                    ChatType.ARCHIVE,
+                    lastMessageShort().second
+            )
         }
+    }
+
+    /**
+     * Создаёт инициалы для группы пользователей
+     *
+     * @param members список пользователей
+     * @return строку с инициалами или "??"
+     */
+    private fun getInitialsGroup(members: List<User>): String {
+        if (members.isEmpty()) return "??"
+        val firstUser = members.first()
+        return Utils.toInitials(firstUser.firstName, firstUser.lastName) ?: "??"
     }
 }
 

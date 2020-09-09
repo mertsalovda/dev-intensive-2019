@@ -7,12 +7,12 @@ package ru.skillbranch.devintensive.models.data
  * @property avatar ссылка на аватар
  * @property initials инициалы для составления аватара без картинки
  * @property title заголовок чата
- * @property shortDescription TODO
- * @property messageCount TODO
+ * @property shortDescription сокращённое последнее сообщение
+ * @property messageCount количество непрочитанных сообщений
  * @property lastMessageDate дата последнего сообщения в чате
  * @property isOnline флаг пользователя находящегося в сети
  * @property chatType тип чата [ChatType]
- * @property author TODO
+ * @property author автор последнего сообщения
  */
 data class ChatItem (
     val id: String,

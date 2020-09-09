@@ -21,9 +21,9 @@ fun Context.dpToPx(dp: Int): Float {
 }
 
 class CircleImageView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
 ) : ImageView(context, attrs, defStyleAttr) {
     companion object {
         private const val DEFAULT_BORDER_WIDHT = 2
@@ -31,14 +31,14 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_SIZE = 40
 
         val bgColors = arrayOf(
-            Color.parseColor("#7BC862"),
-            Color.parseColor("#E17076"),
-            Color.parseColor("#FAA774"),
-            Color.parseColor("#6EC9CB"),
-            Color.parseColor("#65AADD"),
-            Color.parseColor("#A695E7"),
-            Color.parseColor("#EE7AAE"),
-            Color.parseColor("#2196F3")
+                Color.parseColor("#7BC862"),
+                Color.parseColor("#E17076"),
+                Color.parseColor("#FAA774"),
+                Color.parseColor("#6EC9CB"),
+                Color.parseColor("#65AADD"),
+                Color.parseColor("#A695E7"),
+                Color.parseColor("#EE7AAE"),
+                Color.parseColor("#2196F3")
         )
     }
 
@@ -62,7 +62,7 @@ class CircleImageView @JvmOverloads constructor(
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             borderWidth =
-                ta.getDimension(R.styleable.CircleImageView_aiv_borderWidth, context.dpToPx(DEFAULT_BORDER_WIDHT))
+                    ta.getDimension(R.styleable.CircleImageView_aiv_borderWidth, context.dpToPx(DEFAULT_BORDER_WIDHT))
             borderColor = ta.getColor(R.styleable.CircleImageView_aiv_borderColor, DEFAULT_BORDER_COLOR)
             initials = ta.getString(R.styleable.CircleImageView_aiv_initials) ?: "??"
             ta.recycle()
@@ -111,7 +111,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
-        if(state is SavedState){
+        if (state is SavedState) {
             super.onRestoreInstanceState(state)
             isAvatarMode = state.isAvatarMode
             borderWidth = state.borderWidth
@@ -119,7 +119,7 @@ class CircleImageView @JvmOverloads constructor(
 
             borderPaint.apply {
                 color = borderColor
-                strokeWidth =borderWidth
+                strokeWidth = borderWidth
             }
         } else {
             super.onRestoreInstanceState(state)
@@ -216,11 +216,15 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private fun initialsToColor(letters: String): Int {
-        val b = letters[0].toByte()
-        val len = bgColors.size
-        val d = b / len.toDouble()
-        val index = ((d - truncate(d)) * len).toInt()
-        return bgColors[index]
+        return if (letters.isEmpty()) {
+            bgColors.random()
+        } else {
+            val b = letters[0].toByte()
+            val len = bgColors.size
+            val d = b / len.toDouble()
+            val index = ((d - truncate(d)) * len).toInt()
+            bgColors[index]
+        }
     }
 
     private fun toggleMode() {

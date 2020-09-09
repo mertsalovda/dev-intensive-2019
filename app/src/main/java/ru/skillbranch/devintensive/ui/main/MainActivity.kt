@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.ui.group.GroupActivity
@@ -35,9 +36,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        chatAdapter = ChatAdapter {
-            Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_SHORT).show()
+        val listener: (ChatItem) -> Unit = { Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_SHORT).show() }
+        val archiveListener: (ChatItem) -> Unit = {
+            Snackbar.make(rv_chat_list, "ARCHIVE", Snackbar.LENGTH_SHORT).show()
         }
+
+        chatAdapter = ChatAdapter(listener, archiveListener)
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) { chat ->
             viewModel.addToArchive(chat.id)

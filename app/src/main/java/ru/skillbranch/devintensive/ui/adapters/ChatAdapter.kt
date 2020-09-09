@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_chat_archive.*
 import kotlinx.android.synthetic.main.item_chat_group.*
 import kotlinx.android.synthetic.main.item_chat_single.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
 
-class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
+class ChatAdapter(val listener: (ChatItem) -> Unit, val archiveListener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
     companion object {
         private const val ARCHIVE_TYPE = 0
         private val SINGLE_TYPE = 1
@@ -34,6 +35,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         return when (viewType) {
             SINGLE_TYPE -> SingleViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
             GROUP_TYPE -> GroupViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
+            ARCHIVE_TYPE -> ArchiveViewHolder(inflater.inflate(R.layout.item_chat_archive, parent, false))
             else -> SingleViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
         }
     }
@@ -41,7 +43,11 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ChatItemViewHolder, position: Int) {
-        holder.bind(items[position], listener)
+        if (holder is ArchiveViewHolder) {
+            holder.bind(items[position], archiveListener)
+        } else {
+            holder.bind(items[position], listener)
+        }
     }
 
     fun updateData(data: List<ChatItem>) {
@@ -80,7 +86,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
     }
 
     /**
-     * Наследние [ChatItemViewHolder]. Представляет ViewHolder для одиночного чата.
+     * Наследник [ChatItemViewHolder]. Представляет ViewHolder для одиночного чата.
      * Реализует [ItemTouchViewHolder]
      *
      */
@@ -89,7 +95,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
             if (item.avatar == null) {
                 Glide.with(itemView).clear(iv_avatar_single)
-                 iv_avatar_single.setInitials(item.initials ?: "??")
+                iv_avatar_single.setInitials(item.initials ?: "??")
             } else {
                 Glide.with(itemView)
                         .load(item.avatar)
@@ -124,14 +130,14 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
     }
 
     /**
-     * Наследние [ChatItemViewHolder]. Представляет ViewHolder для группового чата.
+     * Наследник [ChatItemViewHolder]. Представляет ViewHolder для группового чата.
      * Реализует [ItemTouchViewHolder]
      *
      */
     inner class GroupViewHolder(convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
-            // iv_avatar_group.setInitials(item.initials)
+            iv_avatar_group.setInitials(item.initials)
             tv_date_group.apply {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
                 text = item.lastMessageDate
@@ -158,6 +164,30 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
         override fun onItemCleared() {
             itemView.setBackgroundColor(Color.WHITE)
+        }
+
+    }
+
+    /**
+     * Наследник [ChatItemViewHolder]. Представляет ViewHolder для архивированных чатов.
+     * Реализует [ItemTouchViewHolder]
+     *
+     */
+    inner class ArchiveViewHolder(convertView: View) : ChatItemViewHolder(convertView) {
+
+        override fun bind(item: ChatItem, archiveListener: (ChatItem) -> Unit) {
+            tv_counter_archive.apply {
+                visibility = if (item.messageCount != 0) View.VISIBLE else View.GONE
+                text = item.messageCount.toString()
+            }
+
+            tv_title_archive.text = containerView!!.context.resources.getString(R.string.title_archive_chats)
+            tv_chat_message.apply {
+                visibility = if (item.messageCount != 0) View.VISIBLE else View.GONE
+                text = item.title
+            }
+            tv_message.text = if (tv_chat_message.visibility == View.GONE) "Архив пуст" else item.shortDescription
+            itemView.setOnClickListener { archiveListener.invoke(item) }
         }
 
     }
