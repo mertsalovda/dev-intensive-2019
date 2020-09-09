@@ -88,7 +88,7 @@ class GroupViewModel : ViewModel() {
 
     /**
      * Обработчик создания группового чата пользоватлей.
-     * Создать групповой чат из выделенных пользователй
+     * Создать групповой чат из выделенных пользователей
      */
     fun handleCreateGroup() {
         groupRepository.createChat(selectedItems.value!!)
