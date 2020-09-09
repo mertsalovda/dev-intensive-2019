@@ -28,7 +28,7 @@
         tools:text="@string/title_archive_chats" />
 
     <TextView
-        android:id="@+id/tv_chat_message"
+        android:id="@+id/tv_author_archive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title_archive"
@@ -42,13 +42,13 @@
         tools:text="John_Doe" />
 
     <TextView
-        android:id="@+id/tv_message"
+        android:id="@+id/tv_message_archive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title_archive"
         android:layout_marginEnd="@dimen/spacing_normal_16"
         android:layout_toStartOf="@id/tv_counter_archive"
-        android:layout_toEndOf="@id/tv_chat_message"
+        android:layout_toEndOf="@id/tv_author_archive"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textColor="@color/color_gray_dark"
