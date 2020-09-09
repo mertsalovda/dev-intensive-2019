@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.models.data.Profile
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -211,33 +212,4 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileDate(this)
         }
     }
-}
-
-data class Profile(
-        val firstName: String?,
-        val lastName: String?,
-        val about: String?,
-        val repository: String?,
-        val rating: Int = 0,
-        val respect: Int = 0
-) {
-
-    var nickName: String = Utils.transliteration("$firstName $lastName".trim(), "_")
-    var rank: String = "Junior Android Developer"
-
-    /**
-     * Представляет объект [Profile] в виде [Map]
-     *
-     * @return Map<K, V>
-     */
-    fun toMap(): Map<String, Any?> = mapOf(
-            "nickName" to nickName,
-            "rank" to rank,
-            "firstName" to firstName,
-            "lastName" to lastName,
-            "about" to about,
-            "repository" to repository,
-            "rating" to rating,
-            "respect" to respect
-    )
 }
