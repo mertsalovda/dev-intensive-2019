@@ -14,6 +14,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
+import ru.skillbranch.devintensive.ui.archive.ArchiveActivity
 import ru.skillbranch.devintensive.ui.group.GroupActivity
 import ru.skillbranch.devintensive.viewmodels.MainViewModel
 
@@ -38,7 +39,8 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         val listener: (ChatItem) -> Unit = { Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_SHORT).show() }
         val archiveListener: (ChatItem) -> Unit = {
-            Snackbar.make(rv_chat_list, "ARCHIVE", Snackbar.LENGTH_SHORT).show()
+            val intent = Intent(this, ArchiveActivity::class.java)
+            startActivity(intent)
         }
 
         chatAdapter = ChatAdapter(listener, archiveListener)
