@@ -71,6 +71,7 @@ class GroupActivity : AppCompatActivity() {
     private fun initViews() {
         usersAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(resources.getDrawable(R.drawable.divider_drawable, theme))
 
         rv_user_list.apply {
             adapter = usersAdapter

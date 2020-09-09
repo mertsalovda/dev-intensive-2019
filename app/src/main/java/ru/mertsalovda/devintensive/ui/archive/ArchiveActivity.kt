@@ -76,6 +76,7 @@ class ArchiveActivity : AppCompatActivity() {
 
         chatAdapter = ChatAdapter(listener, archiveListener)
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(resources.getDrawable(R.drawable.divider_drawable, theme))
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter, TouchType.UNARCHIVE) { chat ->
             viewModel.removeFromArchive(chat.id)
             Snackbar.make(rv_chat_list, "Вы точно хотите убрать ${chat.title.trim()} из архива?", Snackbar.LENGTH_LONG)

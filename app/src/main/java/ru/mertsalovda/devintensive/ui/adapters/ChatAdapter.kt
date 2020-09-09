@@ -73,11 +73,12 @@ class ChatAdapter(
     }
 
     /**
-     * Базовый класс для [ViewHolder] саиска чатов.
+     * Базовый класс для [ViewHolder] саписка чатов.
      * Реализует [LayoutContainer] из библиотеки kotlinx.android.extensions
      *
      * @see SingleViewHolder ViewHolder для одиночного чата
      * @see GroupViewHolder ViewHolder для группового чата
+     * @see ArchiveViewHolder ViewHolder для архива
      *
      * @param convertView view разметки элемента списка
      */
