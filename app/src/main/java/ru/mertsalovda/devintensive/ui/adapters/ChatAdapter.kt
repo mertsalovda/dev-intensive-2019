@@ -15,11 +15,15 @@ import ru.mertsalovda.devintensive.R
 import ru.mertsalovda.devintensive.models.data.ChatItem
 import ru.mertsalovda.devintensive.models.data.ChatType
 
-class ChatAdapter(val listener: (ChatItem) -> Unit, val archiveListener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
+class ChatAdapter(
+        private val listener: (ChatItem) -> Unit,
+        private val archiveListener: (ChatItem) -> Unit
+) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
+
     companion object {
         private const val ARCHIVE_TYPE = 0
-        private val SINGLE_TYPE = 1
-        private val GROUP_TYPE = 2
+        private const val SINGLE_TYPE = 1
+        private const val GROUP_TYPE = 2
     }
 
     var items: List<ChatItem> = listOf()
