@@ -3,6 +3,7 @@ package ru.skillbranch.devintensive.ui.archive
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -43,7 +44,7 @@ class ArchiveActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
-        searchView.queryHint = "Введите имя пользователя"
+        searchView.queryHint = "Введите название чата"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
@@ -60,7 +61,7 @@ class ArchiveActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home){
+        return if (item?.itemId == android.R.id.home) {
             finish()
             overridePendingTransition(R.anim.idle, R.anim.bottom_down)
             true
@@ -93,6 +94,9 @@ class ArchiveActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ArchiveViewModel::class.java)
-        viewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
+        viewModel.getChatData().observe(this, Observer {
+            tv_empty_list.visibility = if(it.isNotEmpty()) View.GONE else View.VISIBLE
+            chatAdapter.updateData(it)
+        })
     }
 }

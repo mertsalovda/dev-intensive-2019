@@ -3,6 +3,7 @@ package ru.skillbranch.devintensive.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
-        searchView.queryHint = "Введите имя пользователя"
+        searchView.queryHint = "Введите название чата"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
@@ -91,6 +92,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
+        viewModel.getChatData().observe(this, Observer {
+            tv_empty_list.visibility = if (it.size > 1) View.GONE else View.VISIBLE
+            chatAdapter.updateData(it)
+        })
     }
 }
