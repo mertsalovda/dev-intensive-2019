@@ -18,6 +18,7 @@ import ru.mertsalovda.devintensive.models.data.ChatItem
 import ru.mertsalovda.devintensive.ui.adapters.ChatAdapter
 import ru.mertsalovda.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.mertsalovda.devintensive.ui.archive.ArchiveActivity
+import ru.mertsalovda.devintensive.ui.chat.ChatActivity
 import ru.mertsalovda.devintensive.ui.group.GroupActivity
 import ru.mertsalovda.devintensive.viewmodels.MainViewModel
 
@@ -60,7 +61,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        val listener: (ChatItem) -> Unit = { Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_SHORT).show() }
+        val listener: (ChatItem) -> Unit = {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(ChatActivity.CHAT_ID, it.id)
+            startActivity(intent)
+        }
         val archiveListener: (ChatItem) -> Unit = {
             val intent = Intent(this, ArchiveActivity::class.java)
             startActivity(intent)

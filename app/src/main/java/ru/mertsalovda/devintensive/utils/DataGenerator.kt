@@ -481,6 +481,7 @@ object DataGenerator {
      */
     private fun generateRandomMessages(chat: Chat, users: List<User>): MutableList<BaseMessage> {
         val list = mutableListOf<BaseMessage>()
+        val bool = listOf(true, false)
         val rnd = (0..10).random()
         for (i in 0 until rnd) {
             val user = randomUser(users)
@@ -489,7 +490,7 @@ object DataGenerator {
                     "$i",
                     user,
                     chat,
-                    true,
+                        bool.random()!!,
                     user.lastVisit ?: Date(),
                     false,
                     randomTextPayload()

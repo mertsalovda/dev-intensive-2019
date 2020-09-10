@@ -14,4 +14,9 @@
     <color name="color_divider_light">#1FFFFFFF</color>
     <color name="color_indicator">#581F99</color>
     <color name="color_green">#4FD149</color>
+
+    <color name="color_message_in">#70F0948C</color>
+    <color name="color_message_out">#707D68B6</color>
+
+
 </resources>
