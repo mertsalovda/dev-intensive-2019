@@ -1,6 +1,5 @@
 package ru.mertsalovda.devintensive.ui.adapters
 
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_message_text.*
+import kotlinx.android.synthetic.main.item_message_in.* // TODO разобраться с биндингом
 import ru.mertsalovda.devintensive.R
 import ru.mertsalovda.devintensive.extensions.shortFormat
 import ru.mertsalovda.devintensive.models.BaseMessage
@@ -18,24 +17,42 @@ import ru.mertsalovda.devintensive.models.TextMessage
 class MessageAdapter : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     companion object {
-        private const val TEXT = 0
-        private const val IMAGE = 1
+        private const val TEXT_IN = 10
+        private const val TEXT_OUT = 11
+        private const val IMAGE_IN = 20
+        private const val IMAGE_OUT = 21
     }
 
     private var items = listOf<BaseMessage>()
 
-    override fun getItemViewType(position: Int): Int = when (items[position]) {
-        is TextMessage -> TEXT
-        is ImageMessage -> IMAGE
+    override fun getItemViewType(position: Int): Int = when {
+        items[position] is TextMessage && items[position].isIncoming -> TEXT_IN
+        items[position] is TextMessage && !items[position].isIncoming -> TEXT_OUT
+        items[position] is ImageMessage && items[position].isIncoming -> IMAGE_IN
+        items[position] is ImageMessage && !items[position].isIncoming -> IMAGE_OUT
         else -> throw IllegalStateException("Неизвествный формат сообщения")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val convertView = inflater.inflate(R.layout.item_message_text, parent, false)
         return when (viewType) {
-            TEXT -> TextMessageViewHolder(convertView)
-            else -> ImageMessageViewHolder(convertView)
+            TEXT_IN -> {
+                val convertView = inflater.inflate(R.layout.item_message_in, parent, false)
+                TextMessageViewHolder(convertView)
+            }
+            TEXT_OUT -> {
+                val convertView = inflater.inflate(R.layout.item_message_out, parent, false)
+                TextMessageViewHolder(convertView)
+            }
+            IMAGE_IN -> {
+                val convertView = inflater.inflate(R.layout.item_message_in, parent, false)
+                ImageMessageViewHolder(convertView)
+            }
+            IMAGE_OUT -> {
+                val convertView = inflater.inflate(R.layout.item_message_out, parent, false)
+                ImageMessageViewHolder(convertView)
+            }
+            else -> throw IllegalStateException("Неизвествный формат сообщения")
         }
     }
 
@@ -73,22 +90,6 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() 
             get() = itemView
 
         abstract fun bind(item: BaseMessage)
-
-        /**
-         * Устанавливает положение сообщения на разметке в зависимости от воходящее или исходящее
-         *
-         * @param item сообщение [BaseMessage]
-         */
-        protected fun positionMessage(item: BaseMessage) {
-            if (item.isIncoming) {
-                container.gravity = Gravity.START
-                card_message.setCardBackgroundColor(itemView.context.resources.getColor(R.color.color_message_in, itemView.context.theme))
-            } else {
-                container.gravity = Gravity.END
-                card_message.setCardBackgroundColor(itemView.context.resources.getColor(R.color.color_message_out, itemView.context.theme))
-            }
-        }
-
         /**
          * Устанавливает заголовок, формируемый из имени пользователя и даты отправки сообщения
          *
@@ -105,7 +106,6 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() 
         override fun bind(item: BaseMessage) {
             if (item !is TextMessage) return
             iv_content.visibility = View.GONE
-            super.positionMessage(item)
             super.setTitleMessage(item)
             tv_message.apply {
                 text = item.text
@@ -118,7 +118,6 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() 
         override fun bind(item: BaseMessage) {
             if (item !is ImageMessage) return
             tv_message.visibility = View.VISIBLE
-            super.positionMessage(item)
             super.setTitleMessage(item)
             iv_content.apply {
                 visibility = View.GONE
