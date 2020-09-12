@@ -15,8 +15,8 @@
     <color name="color_indicator">#581F99</color>
     <color name="color_green">#4FD149</color>
 
-    <color name="color_message_in">#70F0948C</color>
-    <color name="color_message_out">#707D68B6</color>
+    <color name="color_message_in">#bcebd8</color>
+    <color name="color_message_out">#dcf8c6</color>
 
 
 </resources>
