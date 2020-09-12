@@ -70,7 +70,7 @@ class ChatActivity : AppCompatActivity() {
         })
 
         viewModel.getChat().observe(this, Observer {
-            supportActionBar?.title = it.title
+            supportActionBar?.title = it.toChatItem().title
         })
     }
 }

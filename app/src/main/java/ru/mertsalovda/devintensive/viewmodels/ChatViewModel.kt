@@ -26,6 +26,7 @@ class ChatViewModel : ViewModel() {
 
     fun loadData() {
         val messageList = chatRepository.loadChats().value!!.first { it.id == chatId }.messages
+        chatLiveData.postValue(chatRepository.find(chatId))
         messages.postValue(messageList)
     }
 }
