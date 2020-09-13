@@ -3,6 +3,7 @@ package ru.mertsalovda.devintensive.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -20,6 +21,7 @@ import ru.mertsalovda.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.mertsalovda.devintensive.ui.archive.ArchiveActivity
 import ru.mertsalovda.devintensive.ui.chat.ChatActivity
 import ru.mertsalovda.devintensive.ui.group.GroupActivity
+import ru.mertsalovda.devintensive.ui.profile.ProfileActivity
 import ru.mertsalovda.devintensive.viewmodels.MainViewModel
 
 
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите название чата"
@@ -58,6 +60,16 @@ class MainActivity : AppCompatActivity() {
 
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_profile -> {
+                ProfileActivity.start(this)
+                true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initViews() {

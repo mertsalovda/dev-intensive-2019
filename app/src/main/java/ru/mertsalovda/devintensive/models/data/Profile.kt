@@ -11,7 +11,7 @@ data class Profile(
         val respect: Int = 0
 ) {
 
-    var nickName: String = Utils.transliteration("$firstName $lastName".trim(), "_")
+    var nickName: String = Utils.transliteration("$firstName $lastName".trim())
     var rank: String = "Junior Android Developer"
 
     /**

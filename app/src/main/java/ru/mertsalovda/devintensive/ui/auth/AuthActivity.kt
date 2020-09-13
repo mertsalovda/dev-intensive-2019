@@ -1,5 +1,6 @@
 package ru.mertsalovda.devintensive.ui.auth
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,8 +18,14 @@ import ru.mertsalovda.devintensive.ui.main.MainActivity
 
 class AuthActivity : AppCompatActivity() {
     companion object {
-        private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 9001
+        const val TAG = "GoogleActivity"
+        const val RC_SIGN_IN = 9001
+
+        fun start(context: Context) {
+            val intent = Intent(context, AuthActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var auth: FirebaseAuth
@@ -74,6 +81,7 @@ class AuthActivity : AppCompatActivity() {
     private fun updateUI() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun signIn() {

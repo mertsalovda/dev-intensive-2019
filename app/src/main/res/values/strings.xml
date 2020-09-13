@@ -10,4 +10,7 @@
     <string name="title_archive_chats">Архив чатов</string>
     <string name="message_empty_list">Список чатов пуст</string>
     <string name="hint_message">Cообщение</string>
+    <string name="menu_action_logout">Выход</string>
+    <string name="menu_action_delete_account">Удалить аккаунт</string>
+    <string name="menu_action_profile">Профиль</string>
 </resources>

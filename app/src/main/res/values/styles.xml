@@ -25,7 +25,7 @@
     </style>
 
     <style name="Profile.Header" parent="Profile">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="Profile.Header.Nickname" parent="Profile.Header">

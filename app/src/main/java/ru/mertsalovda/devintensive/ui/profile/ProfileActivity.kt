@@ -1,18 +1,28 @@
 package ru.mertsalovda.devintensive.ui.profile
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.mertsalovda.devintensive.R
 import ru.mertsalovda.devintensive.models.data.Profile
+import ru.mertsalovda.devintensive.ui.auth.AuthActivity
 import ru.mertsalovda.devintensive.utils.Utils
 import ru.mertsalovda.devintensive.viewmodels.ProfileViewModel
 
@@ -20,7 +30,15 @@ class ProfileActivity : AppCompatActivity() {
 
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
+
+        fun start(context: Context) {
+            val intent = Intent(context, ProfileActivity::class.java)
+            context.startActivity(intent)
+        }
     }
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private lateinit var viewModel: ProfileViewModel
     var isEditMode = false
@@ -31,13 +49,88 @@ class ProfileActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        initToolbar()
         initViews(savedInstanceState)
         initViewModel()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        auth = Firebase.auth
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_profile, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_logout -> {
+                signOut()
+                true
+            }
+            R.id.action_delete_account -> {
+                revokeAccess()
+                true
+            }
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Выйти из учётной записи
+     *
+     */
+    private fun signOut() {
+        // Firebase sign out
+        auth.signOut()
+
+        // Google sign out
+        googleSignInClient.signOut().addOnCompleteListener(this) {
+            goToAuth()
+        }
+    }
+
+    /**
+     * Удаляет аккаунт из базы данных Firebase и анулирует доступ Google аккаунта
+     *
+     */
+    private fun revokeAccess() {
+        // Google revoke access
+        googleSignInClient.revokeAccess().addOnCompleteListener(this) {
+            Log.d("ProfileActivity", "revokeAccess ${it.isSuccessful}")
+        }
+
+        auth.currentUser!!
+                .delete()
+                .addOnCompleteListener {
+                    Log.d("ProfileActivity", "delete ${it.isSuccessful}")
+                    goToAuth()
+                }
+    }
+
+    private fun goToAuth() {
+        AuthActivity.start(this)
+        finish()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean(IS_EDIT_MODE, isEditMode)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Профиль"
     }
 
     /**
@@ -49,13 +142,9 @@ class ProfileActivity : AppCompatActivity() {
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
         viewFields = mapOf(
                 "nickName" to tv_nick_name,
-                "rank" to tv_rank,
                 "firstName" to et_first_name,
                 "lastName" to et_last_name,
-                "about" to et_about,
-                "repository" to et_repository,
-                "rating" to tv_rating,
-                "respect" to tv_respect
+                "about" to et_about
         )
         showCurrentMode(isEditMode)
 
@@ -63,7 +152,7 @@ class ProfileActivity : AppCompatActivity() {
         btn_edit.setOnClickListener {
             if (!isEditMode) {
                 updateEditMode()
-            } else if (isEditMode && wr_repository.error == null) {
+            } else if (isEditMode) {
                 saveProfileInfo()
                 updateEditMode()
             }
@@ -72,26 +161,6 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
-
-        et_repository.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(text: Editable?) {
-                if (Utils.validGithubURL(text.toString())) {
-                    wr_repository.error = ""
-                }
-            }
-
-            override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                if (Utils.validGithubURL(text.toString())) {
-                    wr_repository.error = ""
-                } else {
-                    wr_repository.error = "Невалидный адрес репозитория"
-                }
-            }
-        })
     }
 
     /**
@@ -140,12 +209,7 @@ class ProfileActivity : AppCompatActivity() {
         val initialsFirstName = Utils.transliteration(firstName ?: "")
         val initialsLastName = Utils.transliteration(lastName ?: "")
         val initials = "$initialsFirstName$initialsLastName"
-        val avatar = if (initials == "") {
-            resources.getDrawable(R.drawable.avatar_default, theme)
-        } else {
-            null
-        }
-        iv_avatar.setImageDrawable(avatar)
+        Glide.with(this).load(auth.currentUser?.photoUrl).into(iv_avatar)
         iv_avatar.setInitials(initials)
     }
 
@@ -174,7 +238,6 @@ class ProfileActivity : AppCompatActivity() {
             v.background.alpha = if (isEdit) 255 else 0
         }
 
-        ic_eye.visibility = if (isEdit) View.GONE else View.VISIBLE
         wr_about.isCounterEnabled = isEdit
 
         // Меняю иконку btn_edit и переключаю фон
@@ -207,7 +270,7 @@ class ProfileActivity : AppCompatActivity() {
                 firstName = et_first_name.text.toString(),
                 lastName = et_last_name.text.toString(),
                 about = et_about.text.toString(),
-                repository = et_repository.text.toString()
+                repository = ""
         ).apply {
             viewModel.saveProfileDate(this)
         }
