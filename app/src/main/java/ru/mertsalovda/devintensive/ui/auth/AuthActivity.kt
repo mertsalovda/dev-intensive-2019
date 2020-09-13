@@ -70,7 +70,7 @@ class AuthActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success")
                         val user = auth.currentUser
-                        updateUI()
+                        goToChatList()
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
                         Log.d(TAG, "Authentication Failed.")
@@ -78,7 +78,7 @@ class AuthActivity : AppCompatActivity() {
                 }
     }
 
-    private fun updateUI() {
+    private fun goToChatList() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
@@ -87,25 +87,5 @@ class AuthActivity : AppCompatActivity() {
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    private fun signOut() {
-        // Firebase sign out
-        auth.signOut()
-
-        // Google sign out
-        googleSignInClient.signOut().addOnCompleteListener(this) {
-            //updateUI(null)
-        }
-    }
-
-    private fun revokeAccess() {
-        // Firebase sign out
-        auth.signOut()
-
-        // Google revoke access
-        googleSignInClient.revokeAccess().addOnCompleteListener(this) {
-            //updateUI(null)
-        }
     }
 }
